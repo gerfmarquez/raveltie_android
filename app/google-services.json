@@ -1,0 +1,40 @@
+{
+  "project_info": {
+    "project_number": "372774353504",
+    "firebase_url": "https://raveltie.firebaseio.com",
+    "project_id": "raveltie",
+    "storage_bucket": "raveltie.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:372774353504:android:19d429b0db9c1e40752105",
+        "android_client_info": {
+          "package_name": "com.maxor.raveltie"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "372774353504-cp0902pqctk986mt3s1m3mve90n54foq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyD2Meo82eMffL-lRGAvQatooIN4idAkR1c"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "372774353504-cp0902pqctk986mt3s1m3mve90n54foq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
