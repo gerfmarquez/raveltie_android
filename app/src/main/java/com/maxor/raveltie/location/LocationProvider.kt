@@ -6,15 +6,16 @@ import android.location.LocationListener
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.telephony.TelephonyManager
 import com.maxor.raveltie.RaveltieApp
 import io.reactivex.Observable
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 
 class LocationProvider @Inject constructor (val raveltieApp: RaveltieApp) {
 
     fun requestLocation(imei: String) : Observable<LocationData> {
+
         return Observable.fromPublisher<LocationData> { subscriber ->
             catching( { location ->
                 subscriber.onNext(LocationData(

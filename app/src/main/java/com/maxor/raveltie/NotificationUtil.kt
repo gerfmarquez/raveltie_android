@@ -24,13 +24,17 @@ object NotificationUtil {
             PendingIntent.getActivity(service, 0, notificationIntent, 0)
         }
         val notification: Notification = NotificationCompat.Builder(service,channelId)
-            .setContentTitle("Title")
-            .setContentText("Text")
+            .setContentTitle("Raveltie Active")
+            .setContentText("Collecting raveltie reputation score. Tap for more info.")
             .setSmallIcon(R.drawable.notification_icon_background)
             .setContentIntent(pendingIntent)
-            .setTicker("Ticker")
+            .setTicker("")
             .build()
         service.startForeground(LocationService.ONGOING_NOTIFICATION_ID, notification)
+    }
+
+    fun stopForegroundNOtificatioin(service: Service) {
+        service.stopForeground(true)
     }
 
     @RequiresApi(Build.VERSION_CODES.O)

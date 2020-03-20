@@ -23,7 +23,7 @@ interface RaveltieWebService {
 
     @POST("retrieve-score")
     fun pullScore(
-        @Query("imei") imei: Int) : Single<ScoreResponse>
+        @Query("imei") imei: String) : Single<ScoreResponse>
 
     @GET("config")
     fun pullConfig() : Single<RaveltieConfig>
