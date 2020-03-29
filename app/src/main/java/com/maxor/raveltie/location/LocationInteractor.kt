@@ -24,7 +24,6 @@ class LocationInteractor @Inject constructor(
             pushLocation(locationData)
         }
     }
-    var timestamp : Long = 0
     private fun requestLocation(imei:String, callback : (LocationData) -> Unit) {
         //TODO Improve this algorithm to keep track of the deviation of the 30 seconds period
         //TODO And add it  or subtract it from following dynamic intervals to adjust /makeup
@@ -37,9 +36,6 @@ class LocationInteractor @Inject constructor(
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { locationData ->
                 callback(locationData)
-
-                Log.d("###","Seconds Difference: " + ((Date().time - timestamp) / 1000))
-                timestamp = Date().time
             },  {   throwable ->
                 throwable.printStackTrace()
             } )
