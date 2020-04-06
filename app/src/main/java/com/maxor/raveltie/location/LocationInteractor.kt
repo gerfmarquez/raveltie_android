@@ -49,7 +49,7 @@ class LocationInteractor @Inject constructor(
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { locationResponse ->
-                Log.d("","")
+                Log.d("Push Location","Push Location")
             },  {   throwable ->
                 throwable.printStackTrace()
             } ))

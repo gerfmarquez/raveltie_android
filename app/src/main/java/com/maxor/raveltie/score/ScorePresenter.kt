@@ -23,7 +23,7 @@ class ScorePresenter
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { scoreResponse ->
-                scoreView?.showScore(scoreResponse.score)
+                scoreView?.showScore(scoreResponse.score.toInt())
                 cleanup()
             },  {   throwable ->
                     throwable.printStackTrace()

@@ -1,16 +1,14 @@
 package com.maxor.raveltie.score
 
 
-import android.Manifest
 import android.Manifest.permission.ACCESS_BACKGROUND_LOCATION
 import android.Manifest.permission.ACCESS_FINE_LOCATION
 import android.app.AlertDialog
 import android.content.Intent
-import android.content.pm.PackageManager
 import android.content.pm.PackageManager.PERMISSION_GRANTED
+import android.os.Build
 import android.os.Bundle
 import android.view.View
-import androidx.core.app.ActivityCompat
 
 import androidx.core.content.ContextCompat
 import com.maxor.raveltie.BuildConfig
@@ -27,13 +25,15 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
 
     override fun onStart() {
         super.onStart()
-            requestPermissions(arrayOf(ACCESS_FINE_LOCATION),5)
-
+        if(isFinePermissionGranted()) {
+            startRaveltieService()
+        }
     }
     override fun showScore(score: Int) {
         tv_score.text = score.toString()
     }
     override fun showErrorScore() {
+        tv_score.text = "100"
     }
     override fun showConfig(config: RaveltieConfig) {
         if(config.killswitch) {
@@ -57,17 +57,17 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         scorePresenter.presentConfig()
     }
     fun quitRaveltie(view: View) {
-        stopService()
+        stopRaveltieService()
         finish()
     }
-    private fun startService() {
+    private fun startRaveltieService() {
         var extras = Bundle()
         extras!!.putString(LocationService.MODE,LocationService.MODE_START)
         val raveltieService = Intent(this, LocationService::class.java)
         raveltieService.putExtras(extras)
         ContextCompat.startForegroundService(this,raveltieService)
     }
-    private fun stopService() {
+    private fun stopRaveltieService() {
         var extras = Bundle()
         extras!!.putString(LocationService.MODE,LocationService.MODE_STOP)
         val raveltieService = Intent(this, LocationService::class.java)
@@ -79,7 +79,7 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         builder.setMessage(message)
             .setOnCancelListener {
                 finish()
-                stopService()
+                stopRaveltieService()
             }.create().show()
     }
 
@@ -89,11 +89,28 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         if(grantResults[index] == PERMISSION_GRANTED)
         when(permission) {
             ACCESS_FINE_LOCATION  ->
-                requestPermissions(arrayOf(ACCESS_BACKGROUND_LOCATION),5)
+                if(isBackgroundPermissionGranted()) {
+                    startRaveltieService()
+                }
             ACCESS_BACKGROUND_LOCATION ->
-                startService()
+                startRaveltieService()
         }
         else
         createAlertDialog("Permission needs to be accepted for Raveltie to work properly")
+    }
+    fun isBackgroundPermissionGranted(): Boolean {
+         val isNotGranted = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q  &&
+                 checkSelfPermission(ACCESS_BACKGROUND_LOCATION) != PERMISSION_GRANTED)
+        if (isNotGranted) {
+             requestPermissions(arrayOf(ACCESS_BACKGROUND_LOCATION), 5)
+         }
+        return !isNotGranted
+    }
+    fun isFinePermissionGranted() : Boolean {
+        val isNotGranted = checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
+        if(isNotGranted) {
+            requestPermissions(arrayOf(ACCESS_FINE_LOCATION),5)
+        }
+        return !isNotGranted
     }
 }
