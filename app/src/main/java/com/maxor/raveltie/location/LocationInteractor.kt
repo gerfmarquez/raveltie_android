@@ -18,6 +18,9 @@ class LocationInteractor @Inject constructor(
     private val locationProvider: LocationProvider){
 
     val rxDisposables : ArrayList<Disposable> = ArrayList()
+    val rate = 3
+    val initialTimestamp = Date().time
+    var locationCount = 0
 
     fun reportLocation(imei: String) {
         requestLocation (imei){   locationData ->
@@ -28,13 +31,28 @@ class LocationInteractor @Inject constructor(
         //TODO Improve this algorithm to keep track of the deviation of the 30 seconds period
         //TODO And add it  or subtract it from following dynamic intervals to adjust /makeup
         //TODO for unaccounted time
-        var disposable = Observable.interval(30, TimeUnit.SECONDS)
+        var disposable = Observable.interval(rate.toLong(),TimeUnit.SECONDS)
             .flatMap {
+                val elapsed = (Date().time - initialTimestamp)
+                val elapsedRatio = ( elapsed / (rate * 1000) )
+                val elapsedOffset = elapsedRatio - locationCount
+                Log.d("###", "elapsed ratio: $elapsedRatio")
+                Log.d("###", "Location Count: $locationCount")
+                if(elapsedRatio > locationCount) {
+                    val overRemnant = elapsedOffset/rate
+                    Log.d("###", "overRemnant: $overRemnant")
+                    if( overRemnant > 1) {
+
+                    }
+                } else {
+                    Log.d("###", "<<< elapsed $elapsedRatio")
+                }
                 locationProvider.requestLocation(imei)
             }
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { locationData ->
+                locationCount++
                 callback(locationData)
             },  {   throwable ->
                 throwable.printStackTrace()
@@ -57,7 +75,7 @@ class LocationInteractor @Inject constructor(
 
     fun cleanup() {
         rxDisposables.forEach { disposable ->
-            if ( disposable.isDisposed ) {
+            if ( !disposable.isDisposed ) {
                 disposable.dispose()
             }
         }
