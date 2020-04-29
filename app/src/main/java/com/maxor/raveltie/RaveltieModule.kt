@@ -1,5 +1,6 @@
 package com.maxor.raveltie
 
+import com.google.firebase.analytics.FirebaseAnalytics
 import com.maxor.raveltie.location.LocationModule
 import com.maxor.raveltie.location.LocationProvider
 import com.maxor.raveltie.score.ScoreModule
@@ -18,5 +19,11 @@ class RaveltieModule {
     @Provides
     fun provideLocationProvider(raveltieApp : RaveltieApp): LocationProvider {
         return LocationProvider(raveltieApp )
+    }
+
+    @Singleton
+    @Provides
+    fun provideFirebaseAnalytics(raveltieApp: RaveltieApp) : FirebaseAnalytics {
+        return FirebaseAnalytics.getInstance(raveltieApp.applicationContext)
     }
 }

@@ -22,25 +22,14 @@ import javax.inject.Inject
 class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
     @Inject
     lateinit var scorePresenter: ScorePresenter
-
+    private var finePermissionGrantedCallback : (Boolean) -> Unit =  {
+            permission ->
+        if(permission) startRaveltieService()
+    }
     override fun onStart() {
         super.onStart()
-        if(isFinePermissionGranted()) {
-            startRaveltieService()
-        }
-    }
-    override fun showScore(score: Int) {
-        tv_score.text = score.toString()
-    }
-    override fun showErrorScore() {
-        tv_score.text = "100"
-    }
-    override fun showConfig(config: RaveltieConfig) {
-        if(config.killswitch) {
-            createAlertDialog("We apologize for the inconvenience, temporarily out of service.")
-        } else if (config.minReqVers.toFloat() > BuildConfig.VERSION_NAME.toFloat()) {
-            createAlertDialog("Please update app on Google Play Store.")
-        }
+
+        finePermissionGranted()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,6 +44,19 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         super.onResume()
         scorePresenter.presentScore()
         scorePresenter.presentConfig()
+    }
+    override fun showScore(score: Int) {
+        tv_score.text = score.toString()
+    }
+    override fun showErrorScore() {
+        tv_score.text = "100"
+    }
+    override fun showConfig(config: RaveltieConfig) {
+        if(config.killswitch) {
+            createAlertDialog("We apologize for the inconvenience, temporarily out of service.")
+        } else if (config.minReqVers.toFloat() > BuildConfig.VERSION_NAME.toFloat()) {
+            createAlertDialog("Please update app on Google Play Store.")
+        }
     }
     fun quitRaveltie(view: View) {
         stopRaveltieService()
@@ -89,28 +91,26 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         if(grantResults[index] == PERMISSION_GRANTED)
         when(permission) {
             ACCESS_FINE_LOCATION  ->
-                if(isBackgroundPermissionGranted()) {
-                    startRaveltieService()
-                }
+                isBackgroundPermissionGranted()
             ACCESS_BACKGROUND_LOCATION ->
-                startRaveltieService()
+                finePermissionGrantedCallback(true)
         }
         else
         createAlertDialog("Permission needs to be accepted for Raveltie to work properly")
     }
-    fun isBackgroundPermissionGranted(): Boolean {
+    fun isBackgroundPermissionGranted() {
          val isNotGranted = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q  &&
                  checkSelfPermission(ACCESS_BACKGROUND_LOCATION) != PERMISSION_GRANTED)
         if (isNotGranted) {
              requestPermissions(arrayOf(ACCESS_BACKGROUND_LOCATION), 5)
          }
-        return !isNotGranted
+        finePermissionGrantedCallback(!isNotGranted)
     }
-    fun isFinePermissionGranted() : Boolean {
+    fun finePermissionGranted()  {
         val isNotGranted = checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
         if(isNotGranted) {
             requestPermissions(arrayOf(ACCESS_FINE_LOCATION),5)
         }
-        return !isNotGranted
+         finePermissionGrantedCallback(!isNotGranted)
     }
 }
