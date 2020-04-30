@@ -29,6 +29,8 @@ object NotificationUtil {
             .setSmallIcon(R.drawable.notification_icon_background)
             .setContentIntent(pendingIntent)
             .setTicker("")
+            .setSmallIcon(R.drawable.ic_raveltie)
+
             .build()
         service.startForeground(LocationService.ONGOING_NOTIFICATION_ID, notification)
     }

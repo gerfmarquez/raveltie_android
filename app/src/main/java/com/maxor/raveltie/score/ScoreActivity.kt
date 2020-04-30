@@ -22,14 +22,12 @@ import javax.inject.Inject
 class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
     @Inject
     lateinit var scorePresenter: ScorePresenter
-    private var finePermissionGrantedCallback : (Boolean) -> Unit =  {
-            permission ->
-        if(permission) startRaveltieService()
+    private var finePermissionGrantedCallback : () -> Unit =  {
+        startRaveltieService()
     }
     override fun onStart() {
         super.onStart()
-
-        finePermissionGranted()
+        checkPermissionsGranted()
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -91,26 +89,20 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         if(grantResults[index] == PERMISSION_GRANTED)
         when(permission) {
             ACCESS_FINE_LOCATION  ->
-                isBackgroundPermissionGranted()
+                checkBackgroundPermissionGranted()
             ACCESS_BACKGROUND_LOCATION ->
-                finePermissionGrantedCallback(true)
+                finePermissionGrantedCallback()
         }
         else
         createAlertDialog("Permission needs to be accepted for Raveltie to work properly")
     }
-    fun isBackgroundPermissionGranted() {
-         val isNotGranted = (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q  &&
-                 checkSelfPermission(ACCESS_BACKGROUND_LOCATION) != PERMISSION_GRANTED)
-        if (isNotGranted) {
-             requestPermissions(arrayOf(ACCESS_BACKGROUND_LOCATION), 5)
-         }
-        finePermissionGrantedCallback(!isNotGranted)
+    fun checkBackgroundPermissionGranted() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q )
+            requestPermissions(arrayOf(ACCESS_BACKGROUND_LOCATION), 5)
+         else
+            finePermissionGrantedCallback()
     }
-    fun finePermissionGranted()  {
-        val isNotGranted = checkSelfPermission(ACCESS_FINE_LOCATION) != PERMISSION_GRANTED
-        if(isNotGranted) {
-            requestPermissions(arrayOf(ACCESS_FINE_LOCATION),5)
-        }
-         finePermissionGrantedCallback(!isNotGranted)
+    fun checkPermissionsGranted()  {
+        requestPermissions(arrayOf(ACCESS_FINE_LOCATION),5)
     }
 }
