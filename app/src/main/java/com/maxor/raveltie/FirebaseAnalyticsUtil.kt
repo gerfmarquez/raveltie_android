@@ -27,8 +27,7 @@ class FirebaseAnalyticsUtil @Inject constructor(val firebaseAnalytics: FirebaseA
         firebaseAnalytics.logEvent("delay", bundle)
     }
     fun reportQuitCollecting() {
-        val bundle = Bundle()
+        firebaseAnalytics.logEvent("btn_quit", null)
 
-        firebaseAnalytics.logEvent("btn_quit", bundle)
     }
 }
