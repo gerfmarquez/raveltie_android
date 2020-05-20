@@ -12,6 +12,7 @@ import android.view.View
 
 import androidx.core.content.ContextCompat
 import com.maxor.raveltie.BuildConfig
+import com.maxor.raveltie.FirebaseAnalyticsUtil
 import com.maxor.raveltie.R
 import com.maxor.raveltie.RaveltieConfig
 import com.maxor.raveltie.location.LocationService
@@ -22,6 +23,9 @@ import javax.inject.Inject
 class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
     @Inject
     lateinit var scorePresenter: ScorePresenter
+    @Inject
+    lateinit var firebaseAnalyticsUtil: FirebaseAnalyticsUtil
+
     private var finePermissionGrantedCallback : () -> Unit =  {
         startRaveltieService()
     }
@@ -57,6 +61,7 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         }
     }
     fun quitRaveltie(view: View) {
+        firebaseAnalyticsUtil.reportQuitCollecting()
         stopRaveltieService()
         finish()
     }

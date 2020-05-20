@@ -24,17 +24,15 @@ class LocationService : DaggerService() {
     var running = false
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-        Log.d("###", "On Start Command")
+
         if(intent != null) {
             val extras: Bundle? = intent.extras
             if(extras?.getString(MODE)?.equals(MODE_START) == true && !running) {
                 NotificationUtil.setupForegroundNotification(this)
                 locationInteractor.reportLocation(UniqueDeviceID.getUniqueId())
-                Log.d("###","Report Location")
                 running = true
             } else if(extras?.getString(MODE)?.equals(MODE_STOP) == true) {
                 locationInteractor.cleanup()
-                Log.d("###","End Location Reporting")
                 stopForeground(true)
                 stopSelf()
                 running = false
@@ -46,11 +44,9 @@ class LocationService : DaggerService() {
 
     override fun onCreate() {
         super.onCreate()
-        Log.d("###","On Create")
     }
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("###","On Destroy")
         locationInteractor.cleanup()
     }
 

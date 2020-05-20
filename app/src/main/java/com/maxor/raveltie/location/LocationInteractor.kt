@@ -4,7 +4,6 @@ import android.util.Log
 import com.maxor.raveltie.FirebaseAnalyticsUtil
 import com.maxor.raveltie.RaveltieWebService
 import io.reactivex.Observable
-import io.reactivex.ObservableSource
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.Disposable
 import io.reactivex.schedulers.Schedulers
@@ -28,7 +27,7 @@ class LocationInteractor @Inject constructor(
     private val rate = 30
     private val throttleRate = 60
 
-    private var powerSavingIdleResume = Date().time
+    private var detectDelay = Date().time
 
     private var throttleTime = AtomicLong(Date().time)
     private var isThrottle: AtomicBoolean = AtomicBoolean(false)
@@ -45,12 +44,13 @@ class LocationInteractor @Inject constructor(
             .flatMap {
                 Log.d("Location","$it")
 
-                powerSavingRequest(locationProvider.requestLocation(imei)) { elapsedSeconds ->
+                detectDelayRequest() { elapsedSeconds ->
                     Log.d("Location","Elapsed Seconds: $elapsedSeconds")
                 }
+                locationProvider.requestLocation(imei)
             }
-            .subscribeOn(Schedulers.trampoline())
-            .observeOn(Schedulers.newThread())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { locationData ->
 
                 throttleResponse(Date().time, throttleCount, isThrottle, throttleTime) {
@@ -59,7 +59,7 @@ class LocationInteractor @Inject constructor(
                 }
 
                 val time = SimpleDateFormat("HH:mm").format(Date(locationData.timestamp.toLong()))
-                Log.d("Location:","Location: $time")
+                Log.d("Location:","Location: ${locationData.accuracy} ${time}")
             },  {   throwable ->
                 throwable.printStackTrace()
             } )
@@ -87,34 +87,25 @@ class LocationInteractor @Inject constructor(
             }
         }
     }
-    //@TODO Warn user there aren't gps locations available? or phone in energy saving mode?
-    private fun powerSavingRequest(locationRequest: ObservableSource<LocationData>,
-                               callback: (Long)->Unit): ObservableSource<LocationData> {
 
-        var locationObservable: ObservableSource<LocationData>
-        val elapsedSeconds = (Date().time - powerSavingIdleResume) / 1000
+    private fun detectDelayRequest(callback: (Int)->Unit) {
 
-        locationObservable = when {
-            //Request only above or below Throttle Rate
-            (elapsedSeconds < throttleRate) -> locationRequest
-            (elapsedSeconds > (throttleRate * 60)) -> {
-                powerSavingIdleResume = Date().time
-                locationRequest
-            }
-            else -> locationRequest//Observable.empty()
+        val elapsedSeconds = (Date().time - detectDelay).toInt() / 1000
+        if (elapsedSeconds > throttleRate) {
+
+            firebaseAnalyticsUtil.reportDelayDetected(elapsedSeconds)
         }
+        detectDelay = Date().time
 
         callback(elapsedSeconds)
-        return locationObservable
     }
 
     private fun throttleResponse(currentMillis: Long, throttleCount: AtomicInteger,
                             isThrottle: AtomicBoolean, throttleTime: AtomicLong, callback: ()-> Unit) {
 
-        val throttleEnded = currentMillis - throttleTime.get() > rate
+        val throttleEnded = currentMillis - throttleTime.get() > throttleRate
         if(throttleEnded) {
 
-            powerSavingIdleResume = Date().time
             callback()
             if(isThrottle.compareAndSet(true,false)) {
 
