@@ -13,7 +13,7 @@ class FirebaseAnalyticsUtil @Inject constructor(val firebaseAnalytics: FirebaseA
         bundle.putString("device", Build.DEVICE)
         bundle.putString("model", Build.MODEL)
 
-        bundle.putString("throttles",throttleCount.toString())
+        bundle.putInt("throttles",throttleCount)
         firebaseAnalytics.logEvent("throttle", bundle)
     }
     fun reportDelayDetected(delayed : Int) {
@@ -23,7 +23,7 @@ class FirebaseAnalyticsUtil @Inject constructor(val firebaseAnalytics: FirebaseA
         bundle.putString("device", Build.DEVICE)
         bundle.putString("model", Build.MODEL)
 
-        bundle.putString("delayed", delayed.toString())
+        bundle.putInt("delayed", delayed)
         firebaseAnalytics.logEvent("delay", bundle)
     }
     fun reportQuitCollecting() {
