@@ -51,7 +51,7 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
         tv_score.text = score.toString()
     }
     override fun showErrorScore() {
-        tv_score.text = "100"
+        tv_score.text = "1"
     }
     override fun showConfig(config: RaveltieConfig) {
         if(config.killswitch) {

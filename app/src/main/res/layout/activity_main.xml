@@ -1,31 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout
         xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_height="match_parent"
         android:layout_width="match_parent"
+        android:padding="7dp"
         android:background="#333333">
-    <TextView android:layout_width="wrap_content"
-              android:layout_height="wrap_content"
-              android:text="Raveltie Score"
-              android:textColor="#ff7f2a"
-              android:layout_above="@id/tv_score"
-              android:layout_centerHorizontal="true"
-              android:textSize="32sp"
-    />
+    <ImageView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:src="@drawable/raveltie_transparent"
+        android:layout_marginLeft="6dp"
+        android:id="@+id/banner"
+        />
+
     <TextView
-            android:id="@+id/tv_score"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_centerHorizontal="true"
-            android:layout_centerVertical="true"
-            android:textSize="150sp"
-            android:textColor="#ff7f2a"
-    />
-    <Button android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Quit Collecting Raveltie Score"
-            android:onClick="quitRaveltie"
-            android:layout_centerHorizontal="true"
-            android:layout_alignParentBottom="true"
-            android:textColor="#919191"/>
+        android:id="@+id/score_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/center"
+        android:layout_marginBottom="225dp"
+        android:text="Travel Ravelties"
+        android:textSize="22sp"
+        android:textColor="#7ab27a"
+        android:layout_alignParentRight="true"
+        />
+    <TextView
+        android:id="@+id/world_score_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Rank Ravelties"
+        android:textSize="22sp"
+        android:textColor="#7ab27a"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_score"
+        />
+    <TextView
+        android:id="@+id/today_score_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Earned Today "
+        android:textColor="#7ab27a"
+        android:textSize="22sp"
+        android:layout_alignParentRight="true"
+        android:layout_below="@id/tv_world_score"
+        />
+
+    <TextView
+        android:id="@+id/tv_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignTop="@id/score_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="-65dp"
+        android:layout_marginTop="35dp"
+        android:layout_toLeftOf="@id/score_title"
+        android:textColor="#acfaac"
+        android:textSize="68sp"
+        android:textAlignment="textEnd"
+        android:drawableLeft="@drawable/ravelties"
+        android:drawablePadding="15dp"
+        tools:text="15,210" />
+    <TextView
+        android:id="@+id/tv_world_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:layout_marginBottom="50dp"
+        android:layout_alignTop="@id/world_score_title"
+        android:layout_alignParentRight="true"
+        android:layout_marginLeft="-65dp"
+        android:layout_marginTop="35dp"
+        android:layout_toLeftOf="@id/score_title"
+        android:textColor="#acfaac"
+        android:textSize="68sp"
+        android:textAlignment="textEnd"
+        android:drawableLeft="@drawable/ravelties"
+        android:drawablePadding="15dp"
+        tools:text="789" />
+    <TextView
+        android:id="@+id/today_score"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginRight="7dp"
+        android:layout_alignTop="@id/today_score_title"
+        android:layout_marginTop="35dp"
+        android:layout_marginBottom="30dp"
+        android:layout_alignParentRight="true"
+        android:textColor="#acfaac"
+        android:textSize="68sp"
+        android:textAlignment="textEnd"
+        android:drawableLeft="@drawable/ravelties"
+        android:drawablePadding="15dp"
+        tools:text="26" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Quit Travel"
+        android:onClick="quitRaveltie"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentBottom="true"
+        android:textColor="#919191"/>
+    <View
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:id="@+id/center"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        />
 </RelativeLayout>
