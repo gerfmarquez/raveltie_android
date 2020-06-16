@@ -38,14 +38,14 @@
         android:layout_below="@id/tv_score"
         />
     <TextView
-        android:id="@+id/today_score_title"
+        android:id="@+id/tv_title_raveltie_users"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Earned Today "
+        android:text="Raveltie Users Today"
         android:textColor="#7ab27a"
         android:textSize="22sp"
         android:layout_alignParentRight="true"
-        android:layout_below="@id/tv_world_score"
+        android:layout_below="@id/tv_rank_ravelties"
         />
 
     <TextView
@@ -66,7 +66,7 @@
         android:drawablePadding="15dp"
         tools:text="15,210" />
     <TextView
-        android:id="@+id/tv_world_score"
+        android:id="@+id/tv_rank_ravelties"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="7dp"
@@ -83,11 +83,11 @@
         android:drawablePadding="15dp"
         tools:text="789" />
     <TextView
-        android:id="@+id/today_score"
+        android:id="@+id/tv_raveltie_users"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginRight="7dp"
-        android:layout_alignTop="@id/today_score_title"
+        android:layout_alignTop="@id/tv_title_raveltie_users"
         android:layout_marginTop="35dp"
         android:layout_marginBottom="30dp"
         android:layout_alignParentRight="true"

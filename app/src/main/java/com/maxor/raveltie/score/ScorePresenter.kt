@@ -13,6 +13,7 @@ class ScorePresenter
     var scoreView: ScoreView? = null
 
     var rxDisposable : Disposable? = null
+    var rxRankDisposable : Disposable? = null
     var rxConfigDisposable : Disposable? = null
 
     fun bindView(view : ScoreView) {
@@ -23,13 +24,28 @@ class ScorePresenter
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { scoreResponse ->
-                scoreView?.showScore(scoreResponse.score.toInt()-100)
-                cleanup()
+                scoreView?.showScore(scoreResponse.score.toInt())
+                cleanup(rxDisposable)
             },  {   throwable ->
                     throwable.printStackTrace()
                 scoreView?.showErrorScore()
-                cleanup()
+                cleanup(rxDisposable)
                 } )
+    }
+    fun presentRank() {
+        rxRankDisposable =  raveltieWebService.pullRank(UniqueDeviceID.getUniqueId())
+            .subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe( { rankResponse ->
+                scoreView?.showRank(rankResponse.rank,
+                    rankResponse.rankRavelties,
+                    rankResponse.rankUsers)
+                cleanup(rxRankDisposable)
+            },  {   throwable ->
+                throwable.printStackTrace()
+                scoreView?.showErrorRank()
+                cleanup(rxRankDisposable)
+            } )
     }
     fun presentConfig() {
         rxConfigDisposable =  raveltieWebService.pullConfig()
@@ -37,18 +53,24 @@ class ScorePresenter
             .observeOn(AndroidSchedulers.mainThread())
             .subscribe( { configResponse ->
                 scoreView?.showConfig(configResponse)
-                cleanupConfig()
+                cleanup(rxConfigDisposable)
             },  {   throwable ->
                 throwable.printStackTrace()
-                cleanupConfig()
+                cleanup(rxConfigDisposable)
             } )
+    }
+    fun cleanup(rxDisposable : Disposable?) {
+        if (rxDisposable != null  &&  rxDisposable.isDisposed == false) {
+            rxDisposable.dispose()
+        }
     }
     fun cleanup() {
         if (rxDisposable != null  &&  rxDisposable?.isDisposed == false) {
             rxDisposable?.dispose()
         }
-    }
-    fun cleanupConfig() {
+        if (rxRankDisposable != null  &&  rxRankDisposable?.isDisposed == false) {
+            rxRankDisposable?.dispose()
+        }
         if (rxConfigDisposable != null  &&  rxConfigDisposable?.isDisposed == false) {
             rxConfigDisposable?.dispose()
         }

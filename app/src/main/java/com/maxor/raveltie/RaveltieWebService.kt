@@ -1,6 +1,7 @@
 package com.maxor.raveltie
 
 import com.maxor.raveltie.location.LocationResponse
+import com.maxor.raveltie.score.RankResponse
 import com.maxor.raveltie.score.ScoreResponse
 import io.reactivex.Single
 import okhttp3.OkHttpClient
@@ -24,6 +25,10 @@ interface RaveltieWebService {
     @POST("retrieve-score")
     fun pullScore(
         @Query("imei") imei: String) : Single<ScoreResponse>
+
+    @POST("retrieve-rank")
+    fun pullRank(
+        @Query("imei") imei: String) : Single<RankResponse>
 
     @GET("config")
     fun pullConfig() : Single<RaveltieConfig>

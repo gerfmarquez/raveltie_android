@@ -45,13 +45,25 @@ class ScoreActivity : DaggerAppCompatActivity(), ScoreView {
     override fun onResume() {
         super.onResume()
         scorePresenter.presentScore()
+        scorePresenter.presentRank()
         scorePresenter.presentConfig()
     }
     override fun showScore(score: Int) {
         tv_score.text = score.toString()
     }
+    override fun showRank(rank: Int, rankRaveltie: Int, rankUsers: Int) {
+        tv_rank_ravelties.text = rankRaveltie.toString()
+        tv_raveltie_users.text = rankUsers.toString()
+    }
     override fun showErrorScore() {
-        tv_score.text = "1"
+        tv_score.text = "100"
+    }
+
+    override fun showErrorRank() {
+        tv_rank_ravelties.text = "1"
+        tv_raveltie_users.text = "1"
+
+
     }
     override fun showConfig(config: RaveltieConfig) {
         if(config.killswitch) {
