@@ -11,8 +11,8 @@ android {
         applicationId "com.maxor.raveltie"
         minSdkVersion 23
         targetSdkVersion 29
-        versionCode 7
-        versionName "0.7"
+        versionCode 9
+        versionName "0.9"
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
     buildTypes {
@@ -57,5 +57,8 @@ dependencies {
 
     //ReactiveX
     implementation 'io.reactivex.rxjava2:rxandroid:2.1.1'
+
+    //Facebook
+    implementation 'com.facebook.android:facebook-android-sdk:[4,5)'
 
 }
